@@ -18,7 +18,12 @@ public class Movement : MonoBehaviour
     private Vector2 inputDir;
     private bool isGrounded;
     private bool jumpQueued;
+    private ScoreManager scoreManager;
 
+    private void Start()
+    {
+        scoreManager = Object.FindFirstObjectByType<ScoreManager>();
+    }
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -76,5 +81,14 @@ public class Movement : MonoBehaviour
     private void CheckGround()
     {
         isGrounded = Physics.CheckSphere(transform.position, groundCheckRadius,  groundMask, QueryTriggerInteraction.Ignore);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Coin"))
+        {
+            scoreManager.IncreaseScore(1);
+            Destroy(other.gameObject);
+        }
     }
 }
